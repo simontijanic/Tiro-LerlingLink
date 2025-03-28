@@ -1,0 +1,82 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Registrer deg som lærling</h2>
+                    
+                    <%- include('../partials/messages') %>
+                    
+                    <form action="/auth/register" method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">Fornavn</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Etternavn</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-post</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Telefon</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Fagområde</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Velg fagområde</option>
+                                <% const categories = [
+                                    'Elektro',
+                                    'IKT og medieproduksjon',
+                                    'Bygg- og anleggsteknikk',
+                                    'Restaurant- og matfag',
+                                    'Helse- og oppvekstfag',
+                                    'Transport og logistikk',
+                                    'Teknologi- og industrifag'
+                                ] %>
+                                <% categories.forEach(cat => { %>
+                                    <option value="<%= cat %>"><%= cat %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Passord</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Bekreft passord</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                            <label class="form-check-label" for="terms">
+                                Jeg aksepterer <a href="/terms" target="_blank">brukervilkårene</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Registrer deg</button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <p class="text-center mb-0">
+                        Har du allerede en konto? 
+                        <a href="/auth/login" class="text-decoration-none">Logg inn her</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

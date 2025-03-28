@@ -1,46 +1,50 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="/images/logo.png" alt="Tiro Logo" height="30" class="d-inline-block align-text-top me-2">
-                Tiro
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="/">Tiro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/search">Finn lærlinger</a>
+                        <a class="nav-link" href="/search">Søk etter lærlinger</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about">Om oss</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contact">Kontakt</a>
+                        <a class="nav-link" href="/terms">Brukervilkår</a>
                     </li>
                 </ul>
 
-                <div class="navbar-nav">
+                <ul class="navbar-nav">
                     <% if (typeof user !== 'undefined' && user) { %>
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <%= user.name %>
+                        <% if (user.constructor.modelName === 'Apprentice') { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/profile/<%= user._id %>">
+                                    <i class="bi bi-person"></i> Min profil
+                                </a>
+                            </li>
+                        <% } %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<%= user.constructor.modelName === 'Organization' ? '/organization/logout' : '/auth/logout' %>">
+                                <i class="bi bi-box-arrow-right"></i> Logg ut
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="/profile">Min profil</a></li>
-                                <li><a class="dropdown-item" href="/settings">Innstillinger</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/auth/logout">Logg ut</a></li>
-                            </ul>
-                        </div>
+                        </li>
                     <% } else { %>
-                        <a class="nav-link" href="/auth/login">Logg inn</a>
-                        <a class="btn btn-primary ms-2" href="/auth/register">Registrer deg</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/login">Logg inn</a>
+                        </li>
+                        <li class="nav-item">
+                            <div class="btn-group ms-2">
+                                <a class="btn btn-primary" href="/auth/register">Registrer som lærling</a>
+                                <a class="btn btn-outline-primary" href="/organization/register">Registrer bedrift</a>
+                            </div>
+                        </li>
                     <% } %>
-                </div>
+                </ul>
             </div>
         </div>
     </nav>

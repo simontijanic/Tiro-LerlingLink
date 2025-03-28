@@ -1,0 +1,135 @@
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col">
+            <h1>Finn lærlinger</h1>
+            <p class="lead">Søk etter kvalifiserte lærlinger basert på dine behov</p>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-body">
+            <form action="/search" method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="query" class="form-label">Søkeord</label>
+                    <input type="text" class="form-control" id="query" name="query" 
+                           value="<%= typeof query !== 'undefined' ? query : '' %>" 
+                           placeholder="Søk etter ferdigheter, navn...">
+                </div>
+                
+                <div class="col-md-4">
+                    <label for="category" class="form-label">Fagområde</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">Alle fagområder</option>
+                        <% categories.forEach(cat => { %>
+                            <option value="<%= cat %>" <%= category === cat ? 'selected' : '' %>>
+                                <%= cat %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                
+                <div class="col-md-4">
+                    <label for="location" class="form-label">Sted</label>
+                    <input type="text" class="form-control" id="location" name="location" 
+                           value="<%= typeof location !== 'undefined' ? location : '' %>"
+                           placeholder="By eller fylke">
+                </div>
+                
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Søk
+                    </button>
+                    <a href="/search" class="btn btn-outline-secondary ms-2">Nullstill</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <% if (typeof results !== 'undefined' && results.length > 0) { %>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <% results.forEach(apprentice => { %>
+                <div class="col">
+                    <div class="card h-100 shadow-sm hover-shadow">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= apprentice.name %></h5>
+                            <p class="card-subtitle mb-2 text-muted">
+                                <i class="bi bi-geo-alt"></i> <%= apprentice.location %>
+                            </p>
+                            <p class="card-text"><%= apprentice.description %></p>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Fagområde:</small>
+                                <br>
+                                <span class="badge bg-primary"><%= apprentice.category %></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Ferdigheter:</small>
+                                <div class="mt-1">
+                                    <% apprentice.skills.forEach(skill => { %>
+                                        <span class="badge bg-light text-dark me-1"><%= skill %></span>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="/profile/<%= apprentice._id %>" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-person"></i> Se profil
+                                </a>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="bi bi-envelope"></i> Kontakt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else if (typeof query !== 'undefined' || typeof category !== 'undefined' || typeof location !== 'undefined') { %>
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Ingen lærlinger funnet som matcher søkekriteriene dine.
+        </div>
+    <% } %>
+
+    <!-- Add this after the search results -->
+    <% if (typeof pagination !== 'undefined' && pagination.totalPages > 1) { %>
+        <nav aria-label="Search results pages" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <% if (pagination.hasPrev) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= pagination.page - 1 %>&query=<%= query %>&category=<%= category %>&location=<%= location %>">
+                            Previous
+                        </a>
+                    </li>
+                <% } %>
+                
+                <% for(let i = 1; i <= pagination.totalPages; i++) { %>
+                    <li class="page-item <%= pagination.page === i ? 'active' : '' %>">
+                        <a class="page-link" href="?page=<%= i %>&query=<%= query %>&category=<%= category %>&location=<%= location %>">
+                            <%= i %>
+                        </a>
+                    </li>
+                <% } %>
+                
+                <% if (pagination.hasNext) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= pagination.page + 1 %>&query=<%= query %>&category=<%= category %>&location=<%= location %>">
+                            Next
+                        </a>
+                    </li>
+                <% } %>
+            </ul>
+        </nav>
+    <% } %>
+</div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        transition: all .3s ease-in-out;
+    }
+</style>

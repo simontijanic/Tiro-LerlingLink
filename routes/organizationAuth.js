@@ -1,11 +1,20 @@
 const router = require('express').Router();
+const { register, login, logout } = require('../controllers/organizationAuthController');
 
-router.get('/loginOrganization', (req, res) => {
-  res.render('loginOrganization');
+router.get('/login', (req, res) => {
+    res.render('organization/login', {
+        title: 'Logg inn som bedrift'
+    });
 });
 
-router.get('/createOrganization', (req, res) => {
-  res.render('createOrganization');
+router.get('/register', (req, res) => {
+    res.render('organization/register', {
+        title: 'Registrer bedrift'
+    });
 });
+
+router.post('/register', register);
+router.post('/login', login);
+router.get('/logout', logout);
 
 module.exports = router;

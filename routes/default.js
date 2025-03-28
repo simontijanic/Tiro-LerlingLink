@@ -1,19 +1,14 @@
-const router = require("express").Router();
+const router = require('express').Router();
+const { 
+    getHomePage, 
+    getAboutPage, 
+    getContactPage, 
+    getTermsPage 
+} = require('../controllers/pageController');
 
-router.get("/", (req, res) => {
-  res.render("pages/index");
-});
-
-router.get("/contact", (req, res) => {
-  res.render("contact");
-});
-
-router.get("/terms", (req, res) => {
-  res.render("terms");
-});
-
-router.get("/about", (req, res) => {
-  res.render("about");
-});
+router.get('/', getHomePage);
+router.get('/about', getAboutPage);
+router.get('/contact', getContactPage);
+router.get('/terms', getTermsPage);
 
 module.exports = router;

@@ -1,0 +1,244 @@
+<div class="container py-5">
+    <div class="row">
+        <!-- Profile Information -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <% if (isOwnProfile) { %>
+                        <h1 class="card-title h2 mb-4">Rediger profil</h1>
+                        <form action="/profile/<%= profile._id %>/update" method="POST">
+                            <!-- Personal Information -->
+                            <div class="mb-4">
+                                <h3 class="h5">Personlig informasjon</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="firstName" class="form-label">Fornavn</label>
+                                        <input type="text" class="form-control" id="firstName" name="firstName" 
+                                               value="<%= profile.firstName %>" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="lastName" class="form-label">Etternavn</label>
+                                        <input type="text" class="form-control" id="lastName" name="lastName" 
+                                               value="<%= profile.lastName %>" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Telefon</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" 
+                                           value="<%= profile.phone || '' %>">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="category" class="form-label">Fagområde</label>
+                                    <select class="form-select" id="category" name="category" required>
+                                        <% categories.forEach(cat => { %>
+                                            <option value="<%= cat %>" <%= profile.category === cat ? 'selected' : '' %>>
+                                                <%= cat %>
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Lokasjon</label>
+                                    <input type="text" class="form-control" id="location" name="location" 
+                                           value="<%= profile.location || '' %>"
+                                           placeholder="F.eks: Oslo">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Om meg</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4"
+                                              placeholder="Fortell litt om deg selv..."><%= profile.description || '' %></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Skills -->
+                            <div class="mb-4">
+                                <h3 class="h5">Ferdigheter</h3>
+                                <div class="mb-3">
+                                    <label for="skills" class="form-label">Ferdigheter (kommaseparert)</label>
+                                    <input type="text" class="form-control" id="skills" name="skills" 
+                                           value="<%= profile.skills ? profile.skills.join(', ') : '' %>"
+                                           placeholder="F.eks: HTML, CSS, JavaScript">
+                                </div>
+                            </div>
+
+                            <!-- Education -->
+                            <div class="mb-4">
+                                <h3 class="h5">Utdanning</h3>
+                                <div class="mb-3">
+                                    <label for="education.school" class="form-label">Skole</label>
+                                    <input type="text" class="form-control" id="education.school" 
+                                           name="education[school]" value="<%= profile.education?.school || '' %>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="education.program" class="form-label">Studieprogram</label>
+                                    <input type="text" class="form-control" id="education.program" 
+                                           name="education[program]" value="<%= profile.education?.program || '' %>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="education.graduationYear" class="form-label">Avgangssår</label>
+                                    <input type="number" class="form-control" id="education.graduationYear" 
+                                           name="education[graduationYear]" value="<%= profile.education?.graduationYear || '' %>">
+                                </div>
+                            </div>
+
+
+                            <!-- Projects -->
+                            <div class="mb-4">
+                                <h3 class="h5">Prosjekter</h3>
+                                <div id="projectsContainer">
+                                    <% if (profile.projects && profile.projects.length > 0) { %>
+                                        <% profile.projects.forEach((project, index) => { %>
+                                            <div class="project-item border rounded p-3 mb-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Tittel</label>
+                                                    <input type="text" class="form-control" 
+                                                           name="projects[<%= index %>][title]" 
+                                                           value="<%= project.title %>">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Beskrivelse</label>
+                                                    <textarea class="form-control" 
+                                                              name="projects[<%= index %>][description]" 
+                                                              rows="3"><%= project.description %></textarea>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Lenke</label>
+                                                    <input type="url" class="form-control" 
+                                                           name="projects[<%= index %>][url]" 
+                                                           value="<%= project.url %>">
+                                                </div>
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="removeProject(this)">
+                                                    Fjern
+                                                </button>
+                                            </div>
+                                        <% }); %>
+                                    <% } %>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary" onclick="addProject()">
+                                    <i class="bi bi-plus"></i> Legg til prosjekt
+                                </button>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Lagre endringer</button>
+                            </div>
+                        </form>
+                    <% } else { %>
+                        <h1 class="card-title h2 mb-4"><%= profile.name %></h1>
+                        
+                        <div class="mb-4">
+                            <p class="text-muted mb-2">
+                                <i class="bi bi-geo-alt"></i> <%= profile.location %>
+                            </p>
+                            <p class="lead"><%= profile.description %></p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h3 class="h5">Fagområde</h3>
+                            <span class="badge bg-primary"><%= profile.category %></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <h3 class="h5">Ferdigheter</h3>
+                            <div class="d-flex flex-wrap gap-2">
+                                <% profile.skills.forEach(skill => { %>
+                                    <span class="badge bg-light text-dark"><%= skill %></span>
+                                <% }); %>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h3 class="h5">Utdanning</h3>
+                            <% if (profile.education && (profile.education.school || profile.education.program || profile.education.graduationYear)) { %>
+                                <div class="mb-2">
+                                    <% if (profile.education.school) { %>
+                                        <p class="mb-1">
+                                            <strong>Skole:</strong> <%= profile.education.school %>
+                                        </p>
+                                    <% } %>
+                                    <% if (profile.education.program) { %>
+                                        <p class="mb-1">
+                                            <strong>Studieprogram:</strong> <%= profile.education.program %>
+                                        </p>
+                                    <% } %>
+                                    <% if (profile.education.graduationYear) { %>
+                                        <p class="mb-1">
+                                            <strong>Avgangssår:</strong> <%= profile.education.graduationYear %>
+                                        </p>
+                                    <% } %>
+                                </div>
+                            <% } else { %>
+                                <p class="text-muted">Ingen utdanningsinformasjon lagt til</p>
+                            <% } %>
+                        </div>
+
+                        <% if (profile.projects && profile.projects.length > 0) { %>
+                            <div class="mb-4">
+                                <h3 class="h5">Prosjekter</h3>
+                                <% profile.projects.forEach(project => { %>
+                                    <div class="mb-3">
+                                        <h4 class="h6 mb-1">
+                                            <a href="<%= project.url %>" target="_blank" class="text-decoration-none">
+                                                <%= project.title %>
+                                            </a>
+                                        </h4>
+                                        <p class="mb-0"><%= project.description %></p>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <% if (isOwnProfile) { %>
+                        <div class="alert alert-info">
+                            Dette er din profil. Du kan redigere den ved å bruke skjemaet til venstre.
+                        </div>
+                    <% } else { %>
+                        <h3 class="h5 mb-3">Kontakt <%= profile.firstName %></h3>
+                        
+                        <%- include('../partials/messages') %>
+                        
+                        <% if (!user) { %>
+                            <div class="alert alert-info mb-4">
+                                <h4 class="alert-heading">Er du en lærling?</h4>
+                                <p>Registrer deg for å opprette din egen profil og bli funnet av bedrifter.</p>
+                                <hr>
+                                <a href="/auth/register" class="btn btn-primary">Registrer deg som lærling</a>
+                            </div>
+                            <div class="alert alert-info">
+                                Du må være logget inn som bedrift for å kontakte lærlinger.
+                                <hr>
+                                <a href="/organization/login" class="btn btn-primary btn-sm">Logg inn som bedrift</a>
+                                <a href="/organization/register" class="btn btn-outline-primary btn-sm">Registrer bedrift</a>
+                            </div>
+                        <% } else if (user.constructor.modelName !== 'Organization') { %>
+                            <div class="alert alert-info">
+                                Bare bedrifter kan kontakte lærlinger.
+                            </div>
+                        <% } else { %>
+                            <form action="/profile/<%= profile._id %>/contact" method="POST">
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Din melding</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Send melding</button>
+                            </form>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
