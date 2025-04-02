@@ -14,6 +14,16 @@ exports.register = async (req, res) => {
             address 
         } = req.body;
 
+        if (!orgName || !orgNumber || !email || !password || !confirmPassword || !contactPerson || !phone || !address) {
+            req.flash('error', 'Alle felt må fylles ut');
+            return res.redirect('/organization/register');
+        }
+
+        if(orgNumber.length !== 9) {
+            req.flash('error', 'Organisasjonsnummeret må være 9 siffer langt');
+            return res.redirect('/organization/register');
+        }
+
         // Validate password match
         if (password !== confirmPassword) {
             req.flash('error', 'Passordene matcher ikke');

@@ -45,6 +45,8 @@ app.use("/auth", require("./routes/userAuth"));
 app.use("/organization", require("./routes/organizationAuth"));
 app.use("/search", require("./routes/search"));
 app.use("/profile", require("./routes/profile"));
+app.use("/organizations", require("./routes/organizationSearch")); 
+
 
 const Connect = async () => {
     try {

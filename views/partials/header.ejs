@@ -14,15 +14,27 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/search">Søk etter lærlinger</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">Om oss</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/terms">Brukervilkår</a>
-                    </li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <% if (user.constructor.modelName === 'Organization') { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/search">
+                                    <i class="bi bi-search"></i> Søk etter lærlinger
+                                </a>
+                            </li>
+                        <% } else if (user.constructor.modelName === 'Apprentice') { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/organizations">
+                                    <i class="bi bi-building"></i> Søk etter bedrifter
+                                </a>
+                            </li>
+                        <% } %>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/search">
+                                <i class="bi bi-search"></i> Søk
+                            </a>
+                        </li>
+                    <% } %>
                 </ul>
 
                 <ul class="navbar-nav">
@@ -37,7 +49,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<%= user.constructor.modelName === 'Organization' ? '/organization/logout' : '/auth/logout' %>">
                                 <i class="bi bi-box-arrow-right"></i> Logg ut
-                            </a>
+                            </a>    
                         </li>
                     <% } else { %>
                         <li class="nav-item">
