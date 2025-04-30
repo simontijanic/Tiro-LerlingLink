@@ -20,12 +20,12 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install dependencies and run tests
-      run: |
-        npm install
-        npm test
+    - name: Install dependencies
+      run: npm install
       env:
         CI: true
+    - name: Skip tests (no tests defined)
+      run: echo "No tests defined, skipping..."
 
   deploy:
     needs: [test]
@@ -47,7 +47,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          cd ~/Tiro-LerlingLink
+          cd ~/tiro-developement
           git pull origin main
           npm install --production
           pm2 restart tiro-app || pm2 start index.js --name tiro-app
