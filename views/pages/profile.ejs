@@ -227,13 +227,7 @@
                                 Bare bedrifter kan kontakte lærlinger.
                             </div>
                         <% } else { %>
-                            <form action="/profile/<%= profile._id %>/contact" method="POST">
-                                <div class="mb-3">
-                                    <label for="message" class="form-label">Din melding</label>
-                                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Send melding</button>
-                            </form>
+                            <a href="mailto:<%= profile.email %>" class="btn btn-primary w-100">Send e-post</a>
                         <% } %>
                     <% } %>
                 </div>
@@ -241,4 +235,3 @@
         </div>
     </div>
 </div>
-    
