@@ -21,3 +21,9 @@ exports.getTermsPage = (req, res) => {
         title: 'Brukervilkår'
     });
 };
+
+exports.getPowerpointPage = (req, res) => {
+    res.render('pages/powerpoint', {
+        title: 'Powerpoint'
+    });
+};

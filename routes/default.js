@@ -3,12 +3,14 @@ const {
     getHomePage, 
     getAboutPage, 
     getContactPage, 
-    getTermsPage 
+    getTermsPage, 
+    getPowerpointPage 
 } = require('../controllers/pageController');
 
 router.get('/', getHomePage);
 router.get('/about', getAboutPage);
 router.get('/contact', getContactPage);
 router.get('/terms', getTermsPage);
+router.get('/powerpoint', getPowerpointPage);
 
 module.exports = router;
